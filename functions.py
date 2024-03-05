@@ -8,35 +8,90 @@ with open("users.csv", mode='w', newline='') as f:
 
 
 
-def register_user():
+def register_user(first_name, last_name, email, password, phone_number, dob, city, province, last_time_played="never played"):
     with open("users.csv", mode="a", newline="") as f:
         register_writer = csv.writer(f, delimiter=",") # writes to the csv file
-        first_name = input("Please enter your first name: ")
-        last_name = input("Please enter your last name: ")
-        email = input("Please enter your email: ")
-        password = input("Please enter you password: ")
-        password_checker = input("Please enter your password again: ")
-        phone_number = input("Please enter your phone number: ")
-        dob = input("Please enter your date of birth in the format dd/mm/yyyy: ")
-        city = input("Please enter your city: ")
-        province = input("Please enter your province: ")
-        if password == password_checker:
-            register_writer.writerow([first_name, last_name, email, password, phone_number, dob, city, province])
-            print("Registration is successful")
-        else:
-            print("Please try again.")
+        register_writer.writerow([first_name, last_name, email, password, phone_number, dob, city, province])
+        print("Registration is successful")
+        return first_name, last_name, province, last_time_played
+       
+
+register_user(first_name="Hellen", last_name="Adeniyi", email="hellenadeniyi29@gmail.com", password="jord", phone_number="6392954157", dob="05/25/2005", city="saskatoon", province="saskatchewan")
 
 
-register_user()
+    
+def confirm_user(email, password):
+    with open('users.csv', 'r') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            if row['email'] == email:
+                if row['password'] == password:
+                    # Correct email and password
+                    print("welcome !!!")
+                    return {
+                        'First Name': row['first_name'],
+                        'Last Name': row['last_name'],
+                        'Email': row['email'],
+                        'City': row['city'],
+                        # 'Last Time Played': row['Last Play Timestamp']
+                    }
+                else:
+                    # Incorrect password
+                    print("Incorect password !!!")
+                    return 'Incorrect password'
 
-def user_login():
-    email = input("Please enter your email: ")
-    password = input("Please enter your password: ")
-    with open("users.csv", mode="r", newline="") as f:
-        reader = csv.reader(f,delimiter=",")
-        for row in reader:
-            if row == [email, password]:
-                print("You are logged in!")
-                return True
-    print("Please try again.")
-    return False
+    # Email not found in users.csv
+    print("User does not exist !")
+    return 'User does not exist, sign up instead'
+
+
+
+confirm_user(email="hellenadeniyi29@gmail.com", password='jord')
+
+def check_play_status():
+    """
+    
+    
+    """
+    pass
+
+
+def get_remaining_time():
+    """
+    
+    """
+    pass
+
+def get_gift():
+    pass
+
+def send_loosing_email():
+    pass
+
+def shuffle_gifts():
+    """
+    
+    """
+    pass
+
+# update last time played only if users can play
+
+def send_email_to_nick():
+    """
+    
+    """
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
