@@ -66,12 +66,15 @@ def check_play_status(email):
     last_time_played="never played"
     play_status = 0
     password = password
+    
     if confirm_user(email, password) != "User does not exist, sign up instead":
         return "You need to Sign Up first"
         # check if they have never played
     elif last_time_played =="never played":
         play_status = 1
-    elif last_time_played < 
+    elif last_time_played < 86400:
+        
+        pass
 
 
     # 
