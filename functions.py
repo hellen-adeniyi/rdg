@@ -1,5 +1,5 @@
 import csv
-import time
+from datetime import datetime, timedelta
 
 
 with open("users.csv", mode='w', newline='') as f:
@@ -8,7 +8,7 @@ with open("users.csv", mode='w', newline='') as f:
     writer.writeheader()
 
 
-
+# sign up
 def register_user(first_name, last_name, email, password, phone_number, dob, city, province, last_time_played="never played"):
     with open("users.csv", mode="a", newline="") as f:
         register_writer = csv.writer(f, delimiter=",") # writes to the csv file
@@ -20,7 +20,7 @@ def register_user(first_name, last_name, email, password, phone_number, dob, cit
 # register_user(first_name="Hellen", last_name="Adeniyi", email="hellenadeniyi29@gmail.com", password="jord", phone_number="6392954157", dob="05/25/2005", city="saskatoon", province="saskatchewan")
 
 
-    
+    # sign in 
 def confirm_user(email, password):
     with open('users.csv', 'r') as file:
         csv_reader = csv.DictReader(file)
@@ -45,9 +45,44 @@ def confirm_user(email, password):
     print("User does not exist !")
     return "User does not exist, sign up instead"
 
-
-
 # confirm_user(email="hellenadeniyi29@gmail.com", password='jord')
+
+def read_player_from_csv(csv_filename):
+    """
+    This function reads player data from csv file and returns a dictionary with email as the key
+
+    """
+    csv_filename = "users_2.csv"
+    player_data = {}
+    with open(csv_filename, 'r') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            email = row["email"]
+            player_data[email] = {"last_played": row["last_time_played"], 
+                                  "play_status": int(row["play_status"]),}
+            return player_data
+        
+
+
+
+def write_player_data_to_csv(csv_filename, player_data):
+    """
+    Writes player data back to the CSV file
+    """
+    with open(csv_filename, "w", newline="") as csvfile:
+        fieldnames = ["first_name", "last_name", "email", "password", "phone_number", "dob", "city", "province", "play_status", "last_time_played"]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for email, data in player_data.items():
+            writer.writerow({
+                "email": email,
+                "last_time_played": data["last_played"],
+                "play_status": data["play_status"],
+            })
+
+
+
+
 
 def check_play_status(email):
     """
@@ -63,21 +98,31 @@ def check_play_status(email):
     Post-conditions: none
     return: 1 for the satus of can play and 0 if player cannot play yet 
     """
-    last_time_played="never played"
-    play_status = 0
-    password = password
-    
-    if confirm_user(email, password) != "User does not exist, sign up instead":
-        return "You need to Sign Up first"
-        # check if they have never played
-    elif last_time_played =="never played":
-        play_status = 1
-    elif last_time_played < 86400:
-        
-        pass
+    player_data = read_player_from_csv(csv_filename="users.csv")
+    if email in player_data:
+        last_played_time = player_data[email]["last_played"]
+        if last_played_time:
+            # player has  played before
+            current_time = datetime.now().strftime("%m-%d-%Y %H:%M:%S")
+            last_played_datetime = datetime.strptime(last_played_time, "%m-%d-%Y %H:%M:%S")
+            elapsed_time = (datetime.strptime(current_time, "%m-%d-%Y %H:%M:%S")-last_played_datetime).total_seconds()
+            if elapsed_time < 24*60*60:
+                #less than 24 hours, player cannot play yet
+                return 0
+            # player hasnt played or its been more than 24 hours
+            # update last_played time to current time
+            player_data[email]["last_played"] = current_time
+            write_player_data_to_csv(csv_filename="users.csv", player_data)
+
+            return 1
+    else:
+        #player is not signed in
+        # Implement sign in logic here (prompt user to sign in)
+        confirm_user(email, password=password)
+        return 0 
 
 
-    # 
+     
     
 
     
