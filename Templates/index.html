@@ -141,8 +141,31 @@
       </div>
     </div>
   </div>
-  <script src="/Static/star.js"></script>
-  <script src="/Static/script.js"></script>
+  <button type="button" onclick="sendData()">Random button</button>
+  <!-- <script src="/Static/star.js"></script> -->
+  <script>
+    function sendData() {
+  const request = "Hello World";
+  console.log("got into sendData", request)
+  fetch('http://localhost:3000/postExample', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+      
+                body: JSON.stringify({ data: request })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // Do something with the response data if needed
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+}
+  </script>
   
 </body>
 </html>

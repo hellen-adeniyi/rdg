@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <button type="button" onclick="sendData()">Random button</button>
+    </div>
+
+    <script>
+        function sendData() {
+      const request = "Hello World";
+      console.log("got into sendData", request)
+      fetch('http://localhost:5000/postReq', {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+          
+                    body: JSON.stringify({ data: request })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // Do something with the response data if needed
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+    
+    }
+      </script>
+</body>
+</html>
